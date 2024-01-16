@@ -1,7 +1,9 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
+
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+
 import axios from "axios";
 
 const apiKey = "41640430-3528202645bdb0a9dd97623d3";
@@ -98,7 +100,13 @@ async function fetchImages(query, page) {
   }
 }
 
+
 async function toggleLoadMoreButton(imageCount) {
+  if (totalHits < 40) {
+    loadMoreBtn.style.display = "none";
+    return;
+  }
+
   if (currentPage * 40 >= totalHits) {
     loadMoreBtn.style.display = "none";
 
@@ -106,11 +114,11 @@ async function toggleLoadMoreButton(imageCount) {
       await iziToast.info({
         title: "Info",
         message: "We're sorry, but you've reached the end of search results.",
-        backgroundColor: "#EF4040",
+        backgroundColor: "#3e5c40",
         position: "topRight",
         messageColor: "#fff",
-        messageSize: "16px",
-        timeout: 5000,
+        messageSize: "14px",
+        timeout: 3000,
         maxWidth: 400,
         transitionIn: "fadeInLeft",
         transitionOut: "fadeOut",
@@ -121,6 +129,7 @@ async function toggleLoadMoreButton(imageCount) {
   }
 }
 
+
 function renderGallery(images, append = false) {
   if (!append) {
     gallery.innerHTML = "";
@@ -130,11 +139,11 @@ function renderGallery(images, append = false) {
     iziToast.info({
       title: "Info",
       message: "Sorry, there are no images matching your search query. Please try again!",
-      backgroundColor: "#EF4040",
+      backgroundColor: "#85380f",
       position: "topRight",
       messageColor: "#fff",
-      messageSize: "16px",
-      timeout: 5000,
+      messageSize: "14px",
+      timeout: 3000,
       maxWidth: 400,
       transitionIn: "fadeInLeft",
       transitionOut: "fadeOut",
