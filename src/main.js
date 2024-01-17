@@ -34,7 +34,7 @@ async function handleFormSubmit(event) {
   currentSearchQuery = searchQuery;
   currentPage = 1;
 
-  showLoader();
+  showLoader(loader);
 
   try {
     const { images, total } = await fetchImages(currentSearchQuery, currentPage);
@@ -44,13 +44,13 @@ async function handleFormSubmit(event) {
   } catch (error) {
     handleError(error);
   } finally {
-    hideLoader();
+    hideLoader(loader);
     form.reset();
   }
 }
 
 async function loadMoreImages() {
-  showLoader();
+  showLoader(loader);
   currentPage++;
 
   try {
@@ -59,15 +59,14 @@ async function loadMoreImages() {
     renderGallery(images, true);
     await toggleLoadMoreButton(images.length);
 
-   
     window.scrollBy({
-      top: cardHeight * 2, 
+      top: cardHeight * 2,
       behavior: 'smooth',
     });
   } catch (error) {
     handleError(error);
   } finally {
-    hideLoader();
+    hideLoader(loader);
   }
 }
 
@@ -85,7 +84,6 @@ async function fetchImages(query, page) {
 
     const { hits, totalHits } = response.data;
 
-   
     if (hits.length > 0 && currentPage === 1) {
       const firstCard = document.querySelector(".gallery__item");
 
@@ -100,17 +98,11 @@ async function fetchImages(query, page) {
   }
 }
 
-
 async function toggleLoadMoreButton(imageCount) {
-  if (totalHits < 40) {
-    loadMoreBtn.style.display = "none";
-    return;
-  }
-
   if (currentPage * 40 >= totalHits) {
     loadMoreBtn.style.display = "none";
 
-    if (currentPage * 40 >= totalHits && imageCount > 0) {
+    if (imageCount > 0) {
       await iziToast.info({
         title: "Info",
         message: "We're sorry, but you've reached the end of search results.",
@@ -128,7 +120,6 @@ async function toggleLoadMoreButton(imageCount) {
     loadMoreBtn.style.display = "block";
   }
 }
-
 
 function renderGallery(images, append = false) {
   if (!append) {
@@ -203,13 +194,14 @@ function handleError(error) {
   });
 }
 
-function showLoader() {
-  loader.style.display = "block";
+function showLoader(loaderElement) {
+  loaderElement.style.display = "block";
 }
 
-function hideLoader() {
-  loader.style.display = "none";
+function hideLoader(loaderElement) {
+  loaderElement.style.display = "none";
 }
+
 
 
 
